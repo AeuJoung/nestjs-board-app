@@ -23,7 +23,7 @@ export class BoardsController {
     //nest는 ts의 매개변수 데코레이터 기능일 활용해 요청값을 쉽게 받을 수 있게 만들었다.
     return this.boardService.getBoardById(id);
   }
-  /*dto 안쓰는 방식
+  /* dto 안쓰는 방식
   @Post()
   createBoard(
     @Body('title') title: string,
