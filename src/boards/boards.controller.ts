@@ -1,7 +1,18 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 import { BoardsService } from './boards.service';
-import { Board } from './board.model';
+import { Board, BoardStatus } from './board.model';
 import { CreateBoardDto } from './dto/create-board.dto';
+import { BoardStatusValidationPipe } from './pipes/board-status-validation.pipe';
 
 @Controller('boards')
 export class BoardsController {
@@ -13,8 +24,22 @@ export class BoardsController {
   }
 
   @Post('/')
+  @UsePipes(ValidationPipe) //validationPipe : nest에서 미리 만들어놓은 유효성 체크 파이프.
   createBoard(@Body() createBoardDto: CreateBoardDto): Board {
     return this.boardService.createBoard(createBoardDto);
+  }
+
+  @Delete('/:id')
+  deleteBoard(@Param('id') id: string): void {
+    this.boardService.deleteBoard(id);
+  }
+
+  @Patch('/:id/status')
+  updateBoardStatus(
+    @Param('id') id: string,
+    @Body('status', BoardStatusValidationPipe) status: BoardStatus,
+  ): Board {
+    return this.boardService.updateBoardStatus(id, status);
   }
 
   @Get('/:id')

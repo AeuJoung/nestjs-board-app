@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Board, BoardStatus } from './board.model';
 import { v1 as uuid } from 'uuid';
 import { CreateBoardDto } from './dto/create-board.dto';
@@ -24,8 +24,25 @@ export class BoardsService {
     return board;
   }
 
+  deleteBoard(id: string): void {
+    const found = this.getBoardById(id);
+    this.boards = this.boards.filter((board) => board.id !== found.id);
+  }
+
+  updateBoardStatus(id: string, status: BoardStatus): Board {
+    const board = this.getBoardById(id);
+    board.status = status;
+
+    return board;
+  }
+
   getBoardById(id: string): Board {
-    return this.boards.find((board) => board.id === id);
+    const found = this.boards.find((board) => board.id === id);
+    if (!found) {
+      throw new NotFoundException(`Can't find Board width id ${id}.`); //nest에서 만들어놓은 값으 찾을 수 없을 때 호출하는 인스턴스
+    }
+    console.log('zzzz');
+    return found;
   }
   /* dto 사용 x
   createBoard(title: string, description: string) {
