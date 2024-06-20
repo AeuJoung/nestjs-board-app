@@ -1,18 +1,13 @@
 //커스텀 파이프 만들기
 
-import {
-  ArgumentMetadata,
-  BadRequestException,
-  PipeTransform,
-} from '@nestjs/common';
+import { BadRequestException, PipeTransform } from '@nestjs/common';
 import { BoardStatus } from '../board.model';
 
 export class BoardStatusValidationPipe implements PipeTransform {
   readonly StatusOption = [BoardStatus.PRIVATE, BoardStatus.PUBLIC];
 
-  transform(value: any, metadata: ArgumentMetadata) {
+  transform(value: any) {
     value = value.toUpperCase();
-    metadata;
 
     if (!this.isStatusValid(value)) {
       throw new BadRequestException(`${value} isn't int the stauts option`);
